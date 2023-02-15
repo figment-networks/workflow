@@ -100,7 +100,7 @@ class MainTest < Minitest::Test
     c = Class.new
     c.class_eval do
       include Workflow
-      def my_transition(args)
+      def my_transition(event, args)
         args.my_tran
       end
       workflow do
@@ -128,7 +128,7 @@ class MainTest < Minitest::Test
     b = Class.new # the base class with a protected callback
     b.class_eval do
       protected
-      def assign_old(args)
+      def assign_old(event, args)
         args.log('in protected callback in the base class')
       end
 
@@ -152,7 +152,7 @@ class MainTest < Minitest::Test
       end
 
       private
-      def assign(args)
+      def assign(event, args)
         args.log('in private callback')
       end
     end
@@ -266,7 +266,7 @@ class MainTest < Minitest::Test
         state :old
       end
 
-      def age(by=1)
+      def age(event, by=1)
         halt 'too fast' if by > 100
       end
     end
@@ -289,7 +289,7 @@ class MainTest < Minitest::Test
         state :rejected
       end
 
-      def reject(reason)
+      def reject(event, reason)
         halt! 'We do not reject articles unless the reason is important' \
           unless reason =~ /important/i
         self.too_far = "This line should not be executed"
@@ -389,4 +389,3 @@ class MainTest < Minitest::Test
   end
 
 end
-

@@ -111,7 +111,7 @@ module Workflow
       return false if @halted
 
       begin
-        return_value = run_action(event.action, *args) || run_action_callback(event.name, *args)
+        return_value = run_action(event.action, *args) || run_action_callback(event, *args)
       rescue StandardError => e
         run_on_error(e, from, to, name, *args)
       end
@@ -206,8 +206,9 @@ module Workflow
         self.private_methods(false).map(&:to_sym).include?(action)
     end
 
-    def run_action_callback(action_name, *args)
-      action = action_name.to_sym
+    def run_action_callback(event, *args)
+      action = event.name.to_sym
+      args.prepend(event)
       self.send(action, *args) if has_callback?(action)
     end
 

@@ -15,7 +15,7 @@ module Workflow
                    end
     end
 
-    def condition_applicable?(object, event_arguments)
+    def condition_applicable?(object, event_arguments = nil)
       if condition
         if condition.is_a?(Symbol)
           object.send(condition, *event_arguments)
